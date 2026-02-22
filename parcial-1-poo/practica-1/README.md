@@ -9,6 +9,6 @@ Se creó la clase `Usuario` que contiene:
 - **Métodos**: Constructor para inicializar datos y métodos de acceso para mantener el principio de encapsulamiento.
 
 ## Instrucciones de ejecución
-1. Asegúrese de tener un servidor local (XAMPP, Laragon o el servidor integrado de PHP).
-2. Coloque la carpeta en su directorio de servidor.
-3. Acceda a `index.php` desde el navegador (ej. `localhost/practica-1/index.php`).
+1. Asegúrese de tener un servidor local XAMPP
+2. Colocar la carpeta en su directorio del servidor.
+3. Acceder a `index.php` desde el navegador (ej. `localhost/practica-1/index.php`).
