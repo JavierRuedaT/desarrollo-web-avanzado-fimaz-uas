@@ -5,7 +5,7 @@
 class Usuario 
 {
     // 1. Atributos: Debe ser privado para cumplir encapsulamiento
-    private $nombre;
+    private $nombre;D
     private $correo;
 
     // 2. Constructor de la clase
