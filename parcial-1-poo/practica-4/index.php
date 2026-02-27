@@ -7,16 +7,16 @@ $usuarios = [];
 $mensajeError = "";
 
 try {
-    // Creamos los objetos válidos
+    // 1. Creamos los objetos válidos
     $usuarios[] = new Admin("Javier Rueda", "admin@uas.edu.mx");
     $usuarios[] = new Alumno("Juan Pérez", "juan@alumno.mx", "2024001");
     $usuarios[] = new Invitado("Maria Lopez", "maria@empresa.com", "Google");
 
-    // Registro inválido para probar la excepción
-    $usuarios[] = new Usuario("Invitado Error", "correo-malo"); 
+    // 2. Registro inválido para comprobar la excepción
+    $usuarios[] = new Alumno("Usuario Error", "correo-mal-escrito", "000"); 
 
 } catch (Exception $e) {
-    // Capturamos el error para mostrarlo en el HTML
+    // Guardamos el mensaje para mostrarlo al final
     $mensajeError = $e->getMessage();
 }
 ?>
@@ -27,20 +27,21 @@ try {
     <meta charset="UTF-8">
     <title>Práctica 4 - Sistema POO</title>
     <style>
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #333; padding: 10px; text-align: left; }
-        th { background-color: #f4f4f4; }
-        .error-box { color: white; background-color: #d9534f; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        body { font-family: sans-serif; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #f8f9fa; }
+        /* Solo las letras en rojo, sin cuadro */
+        .texto-error { 
+            color: #d9534f; 
+            margin-top: 15px; 
+            font-weight: bold; 
+        }
     </style>
 </head>
 <body>
-    <h1>Panel de Control de Usuarios</h1>
 
-    <?php if ($mensajeError): ?>
-        <div class="error-box">
-            <strong>Error controlado:</strong> <?php echo $mensajeError; ?>
-        </div>
-    <?php endif; ?>
+    <h1>Panel de Control de Usuarios</h1>
 
     <table>
         <thead>
@@ -60,5 +61,12 @@ try {
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <?php if ($mensajeError): ?>
+        <p class="texto-error">
+            Excepción capturada: <?php echo $mensajeError; ?>
+        </p>
+    <?php endif; ?>
+
 </body>
 </html>
