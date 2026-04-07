@@ -1,71 +1,77 @@
 <?php
 /**
  * Alumno: Javier Rueda Tostado 
- * Maestro: Dr. José Alfonso Aguilar Calderón
  */
+include_once 'models/Futbolista.php';
+
 class FutbolistaController {
+    private $db;
     private $futbolista;
 
     public function __construct($db) {
-        include_once __DIR__ . '/../models/Futbolista.php';
+        $this->db = $db;
         $this->futbolista = new Futbolista($db);
     }
 
     public function handleRequest($method, $id, $data) {
-        switch($method) {
+        switch ($method) {
             case 'GET':
-                if($id) {
-                    $this->futbolista->id = $id;
-                    if($this->futbolista->readOne()) {
-                        return [
-                            "id" => $this->futbolista->id,
-                            "nombre" => $this->futbolista->nombre,
-                            "posicion" => $this->futbolista->posicion,
-                            "numero" => $this->futbolista->numero,
-                            "edad" => $this->futbolista->edad,
-                            "equipo" => $this->futbolista->equipo
-                        ];
-                    }
-                    http_response_code(404);
-                    return ["message" => "Jugador no encontrado"];
-                }
-                return $this->futbolista->read()->fetchAll(PDO::FETCH_ASSOC);
-
+                return ($id) ? $this->getById($id) : $this->getAll();
             case 'POST':
-                if($data->edad < 0) {
-                    http_response_code(400);
-                    return ["message" => "Error: La edad no puede ser negativa"];
-                }
-                $this->assignData($data);
-                if($this->futbolista->create()) {
-                    http_response_code(201);
-                    return ["message" => "Jugador creado"];
-                }
-                break;
-
+                return $this->create($data);
             case 'PUT':
-                $this->futbolista->id = $id;
-                $this->assignData($data);
-                if($this->futbolista->update()) {
-                    return ["message" => "Datos actualizados"];
-                }
-                break;
-
+                return ($id) ? $this->update($id, $data) : ["message" => "ID requerido"];
             case 'DELETE':
-                $this->futbolista->id = $id;
-                if($this->futbolista->delete()) {
-                    return ["message" => "Jugador eliminado"];
-                }
-                break;
+                return ($id) ? $this->delete($id) : ["message" => "ID requerido"];
+            default:
+                return ["message" => "Metodo no permitido"];
         }
-        return ["message" => "Operación no realizada"];
     }
 
-    private function assignData($data) {
+    private function getAll() {
+        $stmt = $this->futbolista->read();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function getById($id) {
+        $this->futbolista->id = $id;
+        $row = $this->futbolista->readOne();
+        return ($row) ? $row : ["message" => "Futbolista no encontrado"];
+    }
+
+    private function create($data) {
+        if (!empty($data->nombre)) {
+            $this->futbolista->nombre = $data->nombre;
+            $this->futbolista->posicion = $data->posicion;
+            $this->futbolista->numero = $data->numero;
+            $this->futbolista->edad = $data->edad;
+            $this->futbolista->equipo = $data->equipo;
+            if ($this->futbolista->create()) {
+                http_response_code(201);
+                return ["message" => "Futbolista creado exitosamente."];
+            }
+        }
+        return ["message" => "Datos incompletos."];
+    }
+
+    private function update($id, $data) {
+        $this->futbolista->id = $id;
         $this->futbolista->nombre = $data->nombre;
         $this->futbolista->posicion = $data->posicion;
         $this->futbolista->numero = $data->numero;
         $this->futbolista->edad = $data->edad;
         $this->futbolista->equipo = $data->equipo;
+        if ($this->futbolista->update()) {
+            return ["message" => "Futbolista actualizado."];
+        }
+        return ["message" => "Error al actualizar."];
+    }
+
+    private function delete($id) {
+        $this->futbolista->id = $id;
+        if ($this->futbolista->delete()) {
+            return ["message" => "Futbolista eliminado."];
+        }
+        return ["message" => "Error al eliminar."];
     }
 }

@@ -1,13 +1,9 @@
 <?php
-/**
- * Alumno: Javier Rueda Tostado 
- * Maestro: Dr. José Alfonso Aguilar Calderón
- */
 class Database {
     private $host = "localhost";
     private $db_name = "futbol_db";
     private $username = "root";
-    private $password = ""; // Cambia si tienes contraseña
+    private $password = ""; 
     public $conn;
 
     public function getConnection() {
